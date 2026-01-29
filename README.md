@@ -11,6 +11,7 @@ This project is built with [NestJS](https://github.com/nestjs/nest), a progressi
 - ✅ Request validation with DTOs
 - ✅ Route guards
 - ✅ Query parameters handling
+- ✅ Connected to MongoDB Database
 
 ### Learning Progress
 Completed [Scrimba NestJS Tutorial](https://scrimba.com) - January 2026
@@ -50,7 +51,7 @@ $ npm run test:cov
 ## 🎯 Next Steps & Learning Roadmap
 
 ### Core Backend Features
-- [ ] **Database Integration** - Connect to PostgreSQL/MongoDB
+- ~~****Database Integration** - Connect to PostgreSQL/MongoDB~~
 - [ ] **Authentication & Authorization** - Implement JWT-based auth
 - [ ] **Automated Testing** - Expand unit & e2e test coverage
 - [ ] **API Documentation** - Set up Swagger/OpenAPI docs
