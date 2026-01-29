@@ -11,12 +11,28 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const profiles_module_1 = require("./profiles/profiles.module");
+const mongoose_1 = require("@nestjs/mongoose");
+const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [profiles_module_1.ProfilesModule],
+        imports: [
+            profiles_module_1.ProfilesModule,
+            config_1.ConfigModule.forRoot({ isGlobal: true }),
+            mongoose_1.MongooseModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: (configService) => {
+                    const uri = configService.get('MONGODB_URI');
+                    console.log('--- DB URI LOADED: ---', uri);
+                    return {
+                        uri: uri || 'mongodb://atlas-fallback-string-here',
+                    };
+                },
+            }),
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

@@ -10,11 +10,16 @@ exports.ProfilesModule = void 0;
 const common_1 = require("@nestjs/common");
 const profiles_controller_1 = require("./profiles.controller");
 const profiles_service_1 = require("./profiles.service");
+const mongoose_1 = require("@nestjs/mongoose");
+const profile_schema_1 = require("./schema/profile.schema");
 let ProfilesModule = class ProfilesModule {
 };
 exports.ProfilesModule = ProfilesModule;
 exports.ProfilesModule = ProfilesModule = __decorate([
     (0, common_1.Module)({
+        imports: [
+            mongoose_1.MongooseModule.forFeature([{ name: profile_schema_1.Profile.name, schema: profile_schema_1.ProfileSchema }])
+        ],
         controllers: [profiles_controller_1.ProfilesController],
         providers: [profiles_service_1.ProfilesService]
     })

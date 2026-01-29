@@ -5,65 +5,57 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfilesService = void 0;
 const common_1 = require("@nestjs/common");
-const crypto_1 = require("crypto");
+const mongoose_1 = require("@nestjs/mongoose");
+const profile_schema_1 = require("./schema/profile.schema");
 let ProfilesService = class ProfilesService {
-    profiles = [
-        {
-            id: (0, crypto_1.randomUUID)(),
-            name: 'Brianna Watts',
-            description: `Looking for someone to merge with my heart. I’m a full-stack romantic who refactors my feelings until they pass all tests. Bonus points if you can debug my issues while we pair program over coffee. Let’s commit to something beautiful together.`
-        },
-        {
-            id: (0, crypto_1.randomUUID)(),
-            name: 'Jasper Quinn',
-            description: `Seeking a partner in crime to compile my heart. Must be comfortable with the terminal because I only speak fluent bash. Swipe right if you can appreciate a good kernel panic every now and then.`
-        },
-        {
-            id: (0, crypto_1.randomUUID)(),
-            name: 'Leo Park',
-            description: `You think you know VIM? Try Neovim. I'll make your modal dreams come true. Want to escape the matrix and explore the perfect keyboard shortcut for love?`
-        },
-    ];
-    findAll() {
-        return this.profiles;
+    profileModel;
+    constructor(profileModel) {
+        this.profileModel = profileModel;
     }
-    findOne(id) {
-        const matchingprofile = this.profiles.find((profile) => profile.id === id);
-        if (!matchingprofile) {
-            throw new Error(`Profile with ID ${id} not found`);
+    async findAll() {
+        return this.profileModel.find().exec();
+    }
+    async findOne(id) {
+        const profile = await this.profileModel.findById(id).exec();
+        if (!profile) {
+            throw new common_1.NotFoundException(`Profile with ID ${id} not found`);
         }
-        return matchingprofile;
+        return profile;
     }
     create(createProfileDto) {
-        const createdProfile = {
-            id: (0, crypto_1.randomUUID)(),
-            ...createProfileDto
-        };
-        this.profiles.push(createdProfile);
-        return createdProfile;
+        const newProfile = new this.profileModel(createProfileDto);
+        return newProfile.save();
     }
-    update(id, updateProfileDto) {
-        const matchingprofile = this.profiles.find((existingprofile) => existingprofile.id === id);
-        if (!matchingprofile) {
+    async update(id, updateProfileDto) {
+        const updatedProfile = await this.profileModel.findByIdAndUpdate(id, updateProfileDto, { new: true }).exec();
+        if (!updatedProfile) {
+            throw new common_1.NotFoundException('Profile with ID ${id} not found.');
+        }
+        return updatedProfile;
+    }
+    async removeAll() {
+        await this.profileModel.deleteMany({}).exec();
+    }
+    async remove(id) {
+        const result = await this.profileModel.findByIdAndDelete(id);
+        if (!result) {
             throw new common_1.NotFoundException(`Profile with ID ${id} not found`);
         }
-        matchingprofile.name = updateProfileDto.name;
-        matchingprofile.description = updateProfileDto.description;
-        return matchingprofile;
-    }
-    remove(id) {
-        const matchingprofileIndex = this.profiles.findIndex((profile) => profile.id === id);
-        if (matchingprofileIndex === -1) {
-            throw new common_1.NotFoundException(`Profile with ID ${id} not found`);
-        }
-        this.profiles.splice(matchingprofileIndex, 1);
     }
 };
 exports.ProfilesService = ProfilesService;
 exports.ProfilesService = ProfilesService = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __param(0, (0, mongoose_1.InjectModel)(profile_schema_1.Profile.name)),
+    __metadata("design:paramtypes", [Function])
 ], ProfilesService);
 //# sourceMappingURL=profiles.service.js.map

@@ -16,7 +16,7 @@ export class ProfilesController {
 
     //GET /profiles/:id
     @Get(':id')
-    findOne(@Param('id', ParseUUIDPipe) id: UUID){
+    findOne(@Param('id') id: string){
         try{
             return this.profilesService.findOne(id);
         }
@@ -63,7 +63,7 @@ export class ProfilesController {
     
     @Put(':id')
     update(
-        @Param('id', ParseUUIDPipe) id: UUID,
+        @Param('id') id: string,
         @Body() updateProfileDto: UpdateProfileDto
     ){
         return this.profilesService.update(id, updateProfileDto);
@@ -81,8 +81,14 @@ export class ProfilesController {
     @Delete(':id')
     @UseGuards(ProfilesGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
-    remove(@Param('id', ParseUUIDPipe) id: UUID){
+    remove(@Param('id') id: string){
         return this.profilesService.remove(id); 
+    }
+
+    @Delete()
+    @UseGuards(ProfilesGuard)
+    removeAll(){
+        return this.profilesService.removeAll();
     }
 }
 

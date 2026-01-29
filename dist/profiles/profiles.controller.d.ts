@@ -1,29 +1,13 @@
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfilesService } from './profiles.service';
-import type { UUID } from 'crypto';
 export declare class ProfilesController {
     private profilesService;
     constructor(profilesService: ProfilesService);
-    findAll(age: number): {
-        id: `${string}-${string}-${string}-${string}-${string}`;
-        name: string;
-        description: string;
-    }[];
-    findOne(id: UUID): {
-        id: `${string}-${string}-${string}-${string}-${string}`;
-        name: string;
-        description: string;
-    };
-    create(createProfileDto: CreateProfileDto): {
-        name: string;
-        description: string;
-        id: `${string}-${string}-${string}-${string}-${string}`;
-    };
-    update(id: UUID, updateProfileDto: UpdateProfileDto): {
-        id: `${string}-${string}-${string}-${string}-${string}`;
-        name: string;
-        description: string;
-    };
-    remove(id: UUID): void;
+    findAll(age: number): Promise<import("./schema/profile.schema").Profile[]>;
+    findOne(id: string): Promise<import("./schema/profile.schema").Profile>;
+    create(createProfileDto: CreateProfileDto): Promise<import("./schema/profile.schema").Profile>;
+    update(id: string, updateProfileDto: UpdateProfileDto): Promise<import("./schema/profile.schema").Profile>;
+    remove(id: string): Promise<void>;
+    removeAll(): Promise<void>;
 }
